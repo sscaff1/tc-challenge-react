@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Touch Commerce Web Challenge</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://fb.me/react-0.14.7.js"></script>
+    <script src="https://fb.me/react-dom-0.14.7.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="container primary-container" id="primary-container">
+      <img src="img/btn-close.png" class="close-icon"/>
+      <div class="row logo-row">
+        <div class="col-xs-3">
+          <img src="img/logo-best-brands.png" />
+        </div>
+      </div>
+      <div class="row main-content" id="main-content"></div>
+      <div class="row footer">
+        <img src="img/logo-tc.png" />
+      </div>
+    </div>
+    <script type="text/babel">
+      const App = React.createClass({
+        getInitialState() {
+          return {
+            navRoute: true,
+            formSubmitted: false,
+            fullNameEmpty: false,
+            phoneEmpty: false,
+            phoneNotValid: false,
+            showField: false
+          }
+        },
+        moveRoute() {
+          $('#primary-container').css('height', '625px');
+          this.setState({navRoute: false});
+        },
+        determineRoute() {
+          if (this.state.navRoute) {
+            return (<Navigation moveRoute={this.moveRoute} />)
+          } else if (!this.state.formSubmitted){
+            return (<SurveyForm
+              handleSubmit={this.handleSubmit}
+              handleChange={this.handleChange}
+              fullNameEmpty={this.state.fullNameEmpty}
+              phoneEmpty={this.state.phoneEmpty}
+              phoneNotValid={this.state.phoneNotValid}
+              showField={this.state.showField}
+              />)
+          } else {
+            return (<SuccessMessage />)
+          }
+        },
+        handleSubmit(formValues) {
+          const newState = {};
+          if (!formValues.name) {
+            $('[name=fullName]').addClass('invalid-field');
+            newState.fullNameEmpty = true;
+          } else {
+            $('[name=fullName]').removeClass('invalid-field');
+            newState.fullNameEmpty = false;
+          }
+          var regexPattern = /\d{3}-\d{3}-\d{4}/g;
+          if (!formValues.phone) {
+            $('[name=phone]').addClass('invalid-field');
+            newState.phoneEmpty = true;
+          } else if (formValues.phone.match(regexPattern) !== null && formValues.phone.length === 12) {
+            $('[name=phone]').removeClass('invalid-field');
+            newState.phoneEmpty = false;
+            newState.phoneNotValid = false;
+          } else {
+            $('[name=phone]').addClass('invalid-field');
+            newState.phoneEmpty = false;
+            newState.phoneNotValid = true;
+          }
+          if (newState.fullNameEmpty || newState.phoneEmpty || newState.phoneNotValid) {
+            $('[name=fullName]').focus();
+            return this.setState(newState);
+          } else {
+            $('#primary-container').css('height', '625px');
+            this.setState({formSubmitted:true});
+          }
+        },
+        handleChange(state) {
+          if (state === "CA") {
+            $('#primary-container').css('height', '680px');
+            return this.setState({showField: true});
+          } else {
+            $('#primary-container').css('height', '625px');
+            return this.setState({showField: false});
+          }
+        },
+        render() {
+          return (
+            <div>
+              {this.determineRoute()}
+            </div>
+          )
+        }
+      });
+      const Navigation = ({moveRoute}) => (
+        <div>
+          <div className="row breadcrumbs">
+            <p>Home / Existing Service / <span className="active">Mobile</span></p>
+          </div>
+          <div className="row question">
+            <h4>Which Mobile topic would you like help with?</h4>
+          </div>
+          <div className="row">
+            <ul className="main-menu">
+              <a href="#" onClick={moveRoute}><li><img src="img/icon-billing.png" /> Billing and Payments</li></a>
+              <a href="#"><li><img src="img/icon-tech-support.png" /> Technical Support</li></a>
+              <a href="#"><li><img src="img/icon-login.png" /> Account Login Support</li></a>
+              <a href="#"><li><img src="img/icon-other.png" /> Other</li></a>
+            </ul>
+          </div>
+        </div>
+      );
+      const SurveyForm = React.createClass({
+        handleSubmit(event) {
+          event.preventDefault();
+          const formValues = {
+            name: this.refs.fullName.value,
+            phone: this.refs.phone.value,
+          }
+          this.props.handleSubmit(formValues);
+        },
+        handleChange() {
+          this.props.handleChange(this.refs.state.value);
+        },
+        render() {
+          return (
+            <div>
+              <div className="row question">
+                <h4>Which Mobile topic would you like help with?</h4>
+              </div>
+              <div className="row survey">
+                <form onSubmit={this.handleSubmit}>
+                  <div className="form-group">
+                    <label>Full Name:*</label>
+                    <input type="text" className="form-control name-input" placeholder="Full Name" name="fullName" ref="fullName" />
+                    {this.props.fullNameEmpty ? <span className="validate-message">Full Name is a required field</span> : ""}
+                  </div>
+                  <div className="form-group">
+                    <label>Mobile Phone Number:*</label>
+                    <input type="text" className="form-control phone-input" placeholder="ex: 123-123-1234" name="phone" ref="phone" />
+                    {this.props.phoneEmpty ? <span className="validate-message">Mobile number is a required field</span> : ""}
+                    {this.props.phoneNotValid ? <span className="validate-message">Please enter a valid phone number</span> : ""}
+                  </div>
+                  <div className="form-group">
+                    <label>State:</label>
+                    <select className="form-control" name="state" ref="state" onChange={this.handleChange}>
+                      <option value="">Select One</option>
+                      <option value="AL">Alabama</option>
+                      <option value="AK">Alaska</option>
+                      <option value="AZ">Arizona</option>
+                      <option value="AR">Arkansas</option>
+                      <option value="CA">California</option>
+                      <option value="CO">Colorado</option>
+                      <option value="CT">Connecticut</option>
+                      <option value="DE">Delaware</option>
+                      <option value="DC">District Of Columbia</option>
+                      <option value="FL">Florida</option>
+                      <option value="GA">Georgia</option>
+                      <option value="HI">Hawaii</option>
+                      <option value="ID">Idaho</option>
+                      <option value="IL">Illinois</option>
+                      <option value="IN">Indiana</option>
+                      <option value="IA">Iowa</option>
+                      <option value="KS">Kansas</option>
+                      <option value="KY">Kentucky</option>
+                      <option value="LA">Louisiana</option>
+                      <option value="ME">Maine</option>
+                      <option value="MD">Maryland</option>
+                      <option value="MA">Massachusetts</option>
+                      <option value="MI">Michigan</option>
+                      <option value="MN">Minnesota</option>
+                      <option value="MS">Mississippi</option>
+                      <option value="MO">Missouri</option>
+                      <option value="MT">Montana</option>
+                      <option value="NE">Nebraska</option>
+                      <option value="NV">Nevada</option>
+                      <option value="NH">New Hampshire</option>
+                      <option value="NJ">New Jersey</option>
+                      <option value="NM">New Mexico</option>
+                      <option value="NY">New York</option>
+                      <option value="NC">North Carolina</option>
+                      <option value="ND">North Dakota</option>
+                      <option value="OH">Ohio</option>
+                      <option value="OK">Oklahoma</option>
+                      <option value="OR">Oregon</option>
+                      <option value="PA">Pennsylvania</option>
+                      <option value="RI">Rhode Island</option>
+                      <option value="SC">South Carolina</option>
+                      <option value="SD">South Dakota</option>
+                      <option value="TN">Tennessee</option>
+                      <option value="TX">Texas</option>
+                      <option value="UT">Utah</option>
+                      <option value="VT">Vermont</option>
+                      <option value="VA">Virginia</option>
+                      <option value="WA">Washington</option>
+                      <option value="WV">West Virginia</option>
+                      <option value="WI">Wisconsin</option>
+                      <option value="WY">Wyoming</option>
+                    </select>
+                  </div>
+                  {this.props.showField ?
+                  <div className="form-group">
+                    <label>Was your phone purchased in CA?</label>
+                    <select className="form-control">
+                      <option value="">Select One</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div> : ''}
+                  <div className="form-group">
+                    <label>Describe your question...</label>
+                    <textarea className="form-control" name="comment" ref="comment"></textarea>
+                  </div>
+                  <div className="row back-button">
+                    <button type="submit" className="btn">Start Chat</button>
+                    <p><span className="red">*</span>Required field</p>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )
+        }
+      });
+      const SuccessMessage = () => (
+        <div className="row question">
+          <h4>Congratulations!! You have reached the chat agent.</h4>
+        </div>
+      );
+      ReactDOM.render(<App />, document.getElementById('main-content'));
+    </script>
+  </body>
+</html>

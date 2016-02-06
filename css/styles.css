@@ -1,0 +1,149 @@
+.primary-container, .survey-container {
+  border: 1px solid #AAA8AA;
+  border-top-left-radius: 15px;
+  width:300px;
+  margin-top:25px;
+  position: relative;
+}
+.primary-container {
+  height: 470px;
+}
+.survey-container {
+  height: 625px;
+}
+.close-icon {
+  position: absolute;
+  top:12.5px;
+  right:15px;
+  height: 15px;
+}
+.logo-row {
+  background-color: #312B2C;
+  border-bottom: 5px solid #C5E11D;
+  height: 43px;
+  border-top-left-radius: 15px;
+}
+.logo-row img {
+  margin-top:5px;
+  height: 55px;
+}
+.question, .breadcrumbs, .back, .survey {
+  padding-left: 30px;
+}
+.main-content .row:first-child {
+  margin-top: 20px;
+}
+.breadcrumbs p {
+  margin:5px 0 0 0;
+  font-size: 12px;
+  color: #99A57B;
+  text-align: left;
+}
+.breadcrumbs p .active {
+  color: #AAA8AD
+}
+.row.question {
+  max-width:95%;
+}
+ul.main-menu {
+  color: #5A5663;
+  list-style: none;
+  padding:0;
+}
+ul.main-menu li {
+  color: #5A5663;
+  list-style: none;
+  text-align: left;
+  margin: 10px 0 0 0;
+  padding: 5px 15px;
+  width: 298px;
+  margin-left: 15px;
+}
+ul.main-menu li:hover {
+  background-color: #EEFADC;
+}
+ul.main-menu a, .back a {
+  text-decoration: none;
+  color: #B5B3B5;
+}
+ul.main-menu li:active {
+  background-color: #9BCF00;
+}
+ul.main-menu li img, .back img {
+  padding-right: 5px;
+}
+.back {
+  margin-top: 20px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  background-color: #E6E4E6;
+  height: 20px;
+  width: 100%;
+  padding: 1px 0 5px 5px;
+
+}
+.footer img {
+  max-height: 100%;
+  vertical-align: top;
+}
+.survey {
+  width:283px;
+}
+.name-input {
+  background: url("../img/icon-form-avatar.png") no-repeat scroll 7px 7px;
+}
+.phone-input {
+  background: url("../img/icon-form-phone.png") no-repeat scroll 7px 7px;
+}
+.name-input,.phone-input {
+  padding-left: 60px;
+}
+.form-control {
+  margin-bottom: 30px;
+  border-radius: 2px;
+}
+.form-control:focus {
+  background-color: #EFFADA;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-color: #CCCCCC;
+}
+.row.back-button {
+  float:right;
+  padding-right: 15px;
+  text-align: right;
+}
+.row.back-button button {
+  margin-top: 5px;
+  height: 30px;
+  padding:5px 20px;
+  background: url("../img/btn-send-idle.png");
+  color: #F4F2DB;
+  font-weight: bolder;
+}
+.row.back-button p {
+  font-size: 12px;
+  color: #B3B1B3;
+}
+.form-control.invalid-field {
+  background-color: #FFCBCC;
+  border-color: red;
+  background: url("../img/icon-form-avatar.png") no-repeat scroll 7px 7px,
+    url("../img/icon-invalid.gif") no-repeat scroll right 7px top 7px,
+    #FFCBCC;
+}
+.form-control.invalid-field:focus {
+  background-color: #EFFADA;
+}
+.validate-message {
+  position: relative;
+  top: -30px;
+  float: right;
+  color: red;
+  font-size: 12px;
+}
+.red {
+  color:red;
+}
